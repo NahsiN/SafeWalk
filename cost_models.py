@@ -13,7 +13,7 @@ def update_crime_cost_model(df, id_model):
     Inputs
     ------
     df :
-    id_model :
+    id_model : 0 : just counts the number of crimes
     """
 
     con = psycopg2.connect(database='routing_db_crime', user='nishan', password='vikaspuri')
