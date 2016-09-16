@@ -13,14 +13,15 @@ import json
 import ipdb
 
 
-
 # Basic routing given two lat/long points using shortest distance
-(lat_start, lon_start) = (40.7416127, -73.979633)  # 3rd and 28th
-(lat_end, lon_end) = (40.739912, -73.9874349)  # lexington and 2nd
+start_point = (40.7416127, -73.979633)  # 3rd and 28th
+end_point = (40.739912, -73.9874349)  # lexington and 2nd
 
-def shortest_distance_route(start_point, end_point):
+def shortest_route(start_point, end_point, con, model=None):
     """
     Given start and end points, get shortest route based on minimum distance
+
+    model : None or 0
     """
 
     lat_start = start_point[0]
@@ -28,42 +29,53 @@ def shortest_distance_route(start_point, end_point):
     lat_end = end_point[0]
     lon_end = end_point[1]
 
-    con = psycopg2.connect(database='routing_db_crime', user='nishan', password='vikaspuri')
+    # con = psycopg2.connect(database='routing_db_crime', user='nishan', password='vikaspuri')
     cur = con.cursor()
-    query = """
-            SELECT * FROM pgr_dijkstra(
-            -- sql edges
-            'SELECT gid AS id, source, target, length_m AS cost
-                        FROM ways',
-            -- source
-            (SELECT id FROM ways_vertices_pgr
-                    ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
-            -- target
-            (SELECT id FROM ways_vertices_pgr
-        	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({2}, {3}),4326) LIMIT 1),
-                    directed := false);
-            """.format(lon_start, lat_start, lon_end, lat_end)
+    if model is None:
+        query = """
+                SELECT * FROM pgr_dijkstra(
+                -- sql edges
+                'SELECT gid AS id, source, target, length_m AS cost
+                            FROM ways',
+                -- source
+                (SELECT id FROM ways_vertices_pgr
+                        ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
+                -- target
+                (SELECT id FROM ways_vertices_pgr
+            	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({2}, {3}),4326) LIMIT 1),
+                        directed := false);
+                """.format(lon_start, lat_start, lon_end, lat_end)
+    elif model == 0:
+        query = """
+                SELECT * FROM pgr_dijkstra(
+                -- sql edges
+                'SELECT gid AS id, source, target, cost_crime0*length_m AS cost
+                            FROM ways',
+                -- source
+                (SELECT id FROM ways_vertices_pgr
+                        ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
+                -- target
+                (SELECT id FROM ways_vertices_pgr
+            	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({2}, {3}),4326) LIMIT 1),
+                        directed := false);
+                """.format(lon_start, lat_start, lon_end, lat_end)
+    else:
+        raise AssertionError('Invalid model specified')
+
     # cur.execute(query)
     # out = cur.fetchall()
     df = pd.read_sql_query(query, con)
     return df
 
-def minmizie_crimes_per_unit_length_route():
-    """
-    By using '1D' density of crimes = total_number_of_crimes / length_of_road,
-    find shortest route that minimizes 
-    """
 
-    pass
-
-def render_route(df, con):
+def render_route(df, con, fname):
     """
     Given a route's dataframe, use folium to render it
     con : connection to database
+    fname : filename to save html file
     """
 
     cur = con.cursor()
-    ipdb.set_trace()
     start_node = int(df.loc[0, 'node'])
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(start_node)
     tmp_df = pd.read_sql_query(query, con)
@@ -88,4 +100,4 @@ def render_route(df, con):
     tmp_df = pd.read_sql_query(query, con)
     folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End').add_to(routing_map)
 
-    routing_map.save('test.html')
+    routing_map.save(fname)

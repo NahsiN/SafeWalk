@@ -12,7 +12,12 @@ import ipdb
 import sys
 import cost_models
 
-def associate_roads_with_crime():
+dbname = 'routing_db_crime'
+username = 'nishan'
+password = 'vikaspuri'
+con = psycopg2.connect(database=dbname, user=username, password=password)
+
+def associate_roads_with_crime(con):
     # STEP 1
     # Initial load in of the NYC open data set
     fname = 'data/NYPD_7_Major_Felony_Incidents_2010--2016'
@@ -23,11 +28,8 @@ def associate_roads_with_crime():
     # The dataframe needs a gid column to associate with what road the crime
     # occured on
     # Use the lat,long to identify the geom id
-    dbname = 'routing_db_crime'
-    username = 'nishan'
-    password = 'vikaspuri'
-
-    con = psycopg2.connect(database=dbname, user=username, password=password)
+    
+    # con = psycopg2.connect(database=dbname, user=username, password=password)
     # create new column for gid which is unique for each road
     cur = con.cursor()
     num_crimes = df.shape[0]
@@ -56,12 +58,25 @@ def associate_roads_with_crime():
 fname = 'data/NYPD_7_Major_Felony_Incidents_2010--2016_with_roads'
 print('Initial loading from {0}'.format(fname + '.csv'))
 df = pd.read_csv(fname + '.csv')
-cost_models.update_crime_cost_model(df, 0)
+sys.exit()
+cost_models.update_crime_cost_model(df, 0, con)
 
 # Dataframe queries
 # selection by borough and then by sector
 # df_queens = df[df.Borough.isin(['QUEENS'])]
 # df_queens_D = df_queens[df_queens.Sector.isin(['D'])]
+
+# returns the size of each group in this case total number of crimes in each precinct
+df_precinct_crime_counts = df.groupby('Precinct').size()
+
+# group by gid (road id)
+group_gid = df.groupby('gid')
+# number of crimes on each road
+gid_crime_counts = group_gid.size()
+
+for gid in gid_crime_counts.index:
+    precinct_num = df[df.loc[:, 'gid'] == gid].head(1).Precinct.iloc[0]
+    print(gid_crime_counts[gid]/df_precinct_crime_counts[precinct_num])
 
 # Read shape file
 # gf_nypp = gpd.read_file('nypp_16c')
