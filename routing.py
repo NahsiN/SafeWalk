@@ -80,8 +80,9 @@ def render_route(df, con, fname):
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(start_node)
     tmp_df = pd.read_sql_query(query, con)
 
+    # Insight office (40.7438973, -73.9909419)
     routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15)
-    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='Start').add_to(routing_map)
+    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='Start', icon=folium.Icon(color='red')).add_to(routing_map)
 
     # Get lat, long points for each edge except last one because last edge = -1
     for edge in df.edge[0:-1]:
@@ -98,6 +99,6 @@ def render_route(df, con, fname):
     end_node = int(df.loc[df.index[-1], 'node'])
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(end_node)
     tmp_df = pd.read_sql_query(query, con)
-    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End').add_to(routing_map)
+    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End', icon=folium.Icon(color='green')).add_to(routing_map)
 
     routing_map.save(fname)

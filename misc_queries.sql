@@ -9,5 +9,5 @@ SELECT id FROM ways_vertices_pgr
 -- Testing
 SELECT lon, lat FROM ways_vertices_pgr WHERE id = 1;
 
-SELECT ST_AsGeoJSON(the_geom) FROM ways_vertices WHERE id = 75673;
+SELECT ST_AsGeoJSON(the_geom) FROM ways WHERE gid = 75673;
 
