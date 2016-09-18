@@ -62,9 +62,10 @@ def output():
   start_lon_point = float(request.args.get('start_lon_point'))
   end_lat_point = float(request.args.get('end_lat_point'))
   end_lon_point = float(request.args.get('end_lon_point'))
-
+  hour_of_day = int((request.args.get('hour_of_day')))
   # end_point = request.args.get('end_point')
   print(start_lat_point, start_lon_point, end_lat_point, end_lon_point)
+  print(hour_of_day)
 
   # start_point = (40.7416127, -73.979633)  # 3rd and 28th
   # end_point = (40.739912, -73.9874349)  # lexington and 2nd
@@ -74,7 +75,10 @@ def output():
   df_dist = routing.shortest_route(start_point, end_point, con)
   routing.render_route(df_dist, con, '/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/min_dist.html')
   # Routing based on minimizing crime
-  df_crime = routing.shortest_route(start_point, end_point, con, 0)
+  # based on total crime cost
+  # df_crime = routing.shortest_route(start_point, end_point, con, 0)
+  # based on hourly crime cost
+  df_crime = routing.shortest_route(start_point, end_point, con, 1, hour=hour_of_day)
   routing.render_route(df_crime, con, '/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/min_crime.html')
 
   # print(end_point)
