@@ -10,20 +10,17 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>WalkSafe</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+    <!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -55,59 +52,38 @@
       </div>
     </nav>
 
-    <br>
-    <br>
-    <br>
-
     <div class="container">
 
-    <div class="starter-template">
-        <h2>Input Page</h2>
-        <p>Enter latitude and longitude</p>
-    </div>
+      <div class="starter-template">
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">My barebones template.
+          <br> All you get is this text and a mostly barebones HTML document.</p>
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- Embedded NYC map to play around -->
+    <!-- <iframe src="file:///home/nishan/Code/InsightDataScience/my_projects_env/crime/min_crime.html"></iframe> -->
 
     <div class = "container">
-      <form  action="/output" method="get">
-        <div class="form-group">
-          <label for="start_lat_point">Start Latitude Point:</label>
-          <input type="text" id="start_lat_point" name='start_lat_point' placeholder="e.g. ">
-        </div>
-        <div class="form-group">
-          <label for="start_lon_point">Start Longitude Point:</label>
-          <input type="text" id="start_lon_point" name='start_lon_point' placeholder="e.g. ">
-        </div>
-
-        <div class="form-group">
-          <label for="end_lat_point">End Latitude Point:</label>
-          <input type="text" id="end_lat_point" name='end_lat_point' placeholder="e.g. ">
-        </div>
-        <div class="form-group">
-          <label for="end_lon_point">End Longitude Point:</label>
-          <input type="text" id="end_lon_point" name='end_lon_point' placeholder="e.g. ">
-        </div>
-
+      <form  action="/map" method="GET">
         <div>
-          <button type="submit" class="btn btn-default btn-lg">Routing Time</button>
+          <button type="submit" class="btn btn-default btn-lg">NYC Map</button>
+        </div>
+      </form>
+    </div>
+
+    <br> <br> <br>
+
+    <div class = "container">
+      <form  action="/input" method="GET">
+        <div>
+          <button type="submit" class="btn btn-default btn-lg">Input</button>
         </div>
       </form>
     </div>
 
 
-
-
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-
-    </div> <!-- /.container-->
-
-    <table class="table table-hover">
-    <tr><th>index</th><th>Attendant</th><th>birth_month</th></tr>
-    {% for birth in births %}
-    <tr><td>{{ birth['index'] }}</td><td>{{ birth['attendant']}}</td><td> {{ birth['birth_month'] }}</td></tr>
-    {% endfor %}
-    </table>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

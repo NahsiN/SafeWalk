@@ -28,7 +28,7 @@ def associate_roads_with_crime(con):
     # The dataframe needs a gid column to associate with what road the crime
     # occured on
     # Use the lat,long to identify the geom id
-    
+
     # con = psycopg2.connect(database=dbname, user=username, password=password)
     # create new column for gid which is unique for each road
     cur = con.cursor()
@@ -60,6 +60,7 @@ print('Initial loading from {0}'.format(fname + '.csv'))
 df = pd.read_csv(fname + '.csv')
 sys.exit()
 cost_models.update_crime_cost_model(df, 0, con)
+cost_models.update_crime_cost_model(df, 1, con)
 
 # Dataframe queries
 # selection by borough and then by sector
