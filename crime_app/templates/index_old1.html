@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>WalkSafe</title>
+
+    <style>
+      #mapid {
+      height: 95%;
+      float: left;
+      width: 55%;
+      }
+      #coords_forms{
+        float: center;
+      }
+      #start_lat_point{width: 90px;}
+      #start_lon_point{width: 90px;}
+      #end_lat_point{width: 90px;}
+      #end_lon_point{width: 90px;}
+    </style>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="navbar-fixed-top.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="../navbar/">Default</a></li>
+            <li><a href="../navbar-static-top/">Static top</a></li>
+            <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <h1>WalkSafe</h1>
+    <p>Project description goes here</p>
+  </div>
+
+  <br><br><br><br>
+
+  <div id="mapid" style="width: 640px; height: 500px; position: relative;">
+  </div>
+
+  <form action="/output" method="get">
+    Start Latitude:
+    <input type="text" id="start_lat_point" name='start_lat_point'>
+    Start Longitude:
+    <input type="text" id="start_lon_point" name='start_lon_point'>
+    <br> <br>
+    End Latitude:
+    <input type="text" id="end_lat_point" name='end_lat_point'>
+    End Longitude:
+    <input type="text" id="end_lon_point" name='end_lon_point'>
+    <br>
+  <!-- </form> -->
+    <br>
+  <!-- <form name="hour_of_day"> -->
+    Hour of Day:
+    <select name="hour_of_day">
+      <option value="0">00</option>
+      <option value="1">01</option>
+      <option value="2">02</option>
+      <option value="3">03</option>
+      <option value="4">04</option>
+      <option value="5">05</option>
+      <option value="6">06</option>
+      <option value="7">07</option>
+      <option value="8">08</option>
+      <option value="9">09</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="16">16</option>
+      <option value="17">17</option>
+      <option value="18">18</option>
+      <option value="19">19</option>
+      <option value="20">20</option>
+      <option value="21">21</option>
+      <option value="22">22</option>
+      <option value="23">23</option>
+    </select>
+    <br>
+    <button type="submit" class="btn btn-default btn-me">Route</button>
+    <!-- <input type="submit"> -->
+  </form>
+
+  <!-- <div class = "container">
+  <form  action="/output" method="GET">
+    <div id="coords_forms_start" align="center">
+      <div class="form-group">
+        <label for="start_lat_point">Start Latitude</label>
+        <input type="text" id="start_lat_point" name='start_lat_point' placeholder="e.g. ">
+
+        <label for="start_lon_point">Longitude:</label>
+        <input type="text" id="start_lon_point" name='start_lon_point' placeholder="e.g. ">
+      </div>
+    </div>
+
+    <div id="coords_forms_end" align="center">
+      <div class="form-group">
+        <label for="end_lat_point">End Latitude</label>
+        <input type="text" id="end_lat_point" name='end_lat_point' placeholder="e.g. ">
+
+        <label for="end_lon_point">Longitude</label>
+        <input type="text" id="end_lon_point" name='end_lon_point' placeholder="e.g. ">
+      </div>
+    </div>
+  </form>
+  </div> -->
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+      <script src="../static/js/bootstrap.min.js"></script>
+
+
+
+
+  <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+  <!-- Call AFTER leaflet.js call  -->
+  <script src="../static/js/intro_page.js"></script>
+  </body>
+</html>

@@ -1,177 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Site Title</title>
+        <meta name="description" content="">
 
-    <title>WalkSafe</title>
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-    <style>
-      #mapid {
-      height: 95%;
-      float: left;
-      width: 55%;
-      }
-      #coords_forms{
-        float: center;
-      }
-      #start_lat_point{width: 90px;}
-      #start_lon_point{width: 90px;}
-      #end_lat_point{width: 90px;}
-      #end_lon_point{width: 90px;}
-    </style>
-    <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/png" href="favicon.png" />
+        <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png"/>
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+        <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css" /><![endif]-->
+        <!-- <link rel="stylesheet" href="css/main.css?foo=17733"> -->
+        <link rel="stylesheet" href="../static/css/main.css">
 
-    <!-- Custom styles for this template -->
-    <link href="navbar-fixed-top.css" rel="stylesheet">
+        <style>
+          /*#mapid {
+          height: 95%;
+          float: left;
+          width: 55%;
+          }
+          #coords_forms{
+            float: center;
+          }*/
+          #start_lat_point{width: 90px;}
+          #start_lon_point{width: 90px;}
+          #end_lat_point{width: 90px;}
+          #end_lon_point{width: 90px;}
+          #hour_of_day{width: 60px;}
+        </style>
+        <!-- HTML5 for oldIE -->
+        <!--[if lt IE 9]>
+            <script>
+                document.createElement('header'); document.createElement('nav'); document.createElement('section'); document.createElement('article');
+                document.createElement('aside'); document.createElement('footer'); document.createElement('hgroup');
+            </script>
+            <style>
+                header,nav,section,article,aside,footer,hgroup { display: block; }
+            </style>
+        <![endif]-->
+    </head>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
-  </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand hide" href="./index.html">Web Map Template</a>
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
 
-  <body>
-
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="./index.html"><i class="icon-home icon-white"></i> Home</a></li>
+                            <li><a href="javascript:void(0)">Link 1</a></li>
+                            <li><a href="javascript:void(0)">Link 2</a></li>
+                        </ul>
+                        <div class="navbar-form pull-right" >
+                            <label for="searchbox" class="hide">Search</label>
+                            <input id="searchbox" class="span4" type="text" placeholder="Search" rel="popover" data-content="<ul><li><strong>Address</strong>: Enter the beginning of an address. Ex: for 700 North Tryon Street, try <em>700 n</em></li><li><strong>NPA</strong>: Enter the NPA number. Ex: <em>45</em></li><li><strong>Location</strong>: Enter the name of a location or a street. Ex: <em>freedom</em></li></ul>" data-original-title="Search" data-placement="bottom" data-html="true" data-trigger="focus">
+                            <button class="btn btn-inverse searchbtn" type="button">Go!</button>
+                        </div>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="../navbar/">Default</a></li>
-            <li><a href="../navbar-static-top/">Static top</a></li>
-            <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+
+        <!-- Subhead ================================================== -->
+        <header class="jumbotron subhead">
+            <!--[if lt IE 8]>
+                <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+            <![endif]-->
+          <div class="container">
+            <h1>WalkSafe <span class="text-info">more text</span></h1>
+            <h2 class="lead">Subtitle</h2>
+          </div>
+        </header>
+
+        <div class="container">
+            <div class="row main-row">
+                <div class="span12">
+                    <div class="row">
+                        <div id="data" class="span6 pull-left">
+                            <div class="overview">
+                                <h2>Welcome</h2>
+                                <form action="/output" method="get">
+                                  Start Latitude:
+                                  <input type="text" id="start_lat_point" name='start_lat_point'>
+                                  Start Longitude:
+                                  <input type="text" id="start_lon_point" name='start_lon_point'>
+                                  <br> <br>
+                                  End Latitude:
+                                  <input type="text" id="end_lat_point" name='end_lat_point'>
+                                  End Longitude:
+                                  <input type="text" id="end_lon_point" name='end_lon_point'>
+                                  <br>
+                                <!-- </form> -->
+                                  <br>
+                                <!-- <form name="hour_of_day"> -->
+                                  Hour of Day:
+                                  <select name="hour_of_day" id="hour_of_day">
+                                    <option value="0">00</option>
+                                    <option value="1">01</option>
+                                    <option value="2">02</option>
+                                    <option value="3">03</option>
+                                    <option value="4">04</option>
+                                    <option value="5">05</option>
+                                    <option value="6">06</option>
+                                    <option value="7">07</option>
+                                    <option value="8">08</option>
+                                    <option value="9">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                  </select>
+                                  <br>
+                                  <button type="submit" class="btn btn-default btn-me">Route</button>
+                                  <!-- <input type="submit"> -->
+                                </form>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam faucibus eleifend aliquet. Fusce euismod lorem lacus, vitae tristique justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum cursus elementum risus lobortis vestibulum. Maecenas in ligula massa, in dignissim augue. Sed neque massa, egestas quis auctor in, feugiat vestibulum tellus. Sed nec sapien sollicitudin ipsum venenatis aliquam. Nunc condimentum, est quis molestie suscipit, libero mauris egestas turpis, vitae pretium lorem nibh ac sem.
+                                </p>
+                                <p>
+                                   Vivamus non sapien urna. Sed eu ipsum odio, eget congue ipsum. Ut faucibus tortor sit amet urna hendrerit et consectetur odio molestie. Vivamus ut ornare elit. Phasellus id dui odio, sed consequat nisl. Praesent id odio et est aliquet congue a sed nulla. Ut massa magna, tincidunt non hendrerit et, condimentum et augue. Phasellus non accumsan nisl. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin vel felis urna.
+                                </p>
+                                <p>
+                                    <a data-toggle="modal" href="#modalDisclaimer" class="btn btn-primary btn-large">Modal</a>
+                                    <a href="javascript:void(0)" class="btn" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">Popover</a>
+                                    <a href="javascript:void(0)" rel="tooltip" data-placement="bottom" data-original-title="Tooltip on bottom.">Tooltip</a>
+                                </p>
+                                <p>
+                                    See <a href="http://twitter.github.com/bootstrap/">Twitter's Bootstrap site</a> for full CSS/JS documentation.
+                                </p>
+                            </div>
+                        </div>
+                        <div id="map-area" class="span6 pull-right">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div><!-- end of main row -->
+            </div>
+
+            <hr>
+            <footer class="textcenter">
+                <p class="muted">
+                    <a href="https://github.com/tobinbradley/leaflet-bootstrap-mapping-template">Fork me on Github</a>
+                </p>
+            </footer>
+
+        </div><!-- /container -->
+
+        <!-- Content not shown at load -->
+        <div class="modal hide fade" id="modalDisclaimer">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Disclaimer</h3>
+            </div>
+            <div class="modal-body">
+                <p>This system is subject to current public information rules and regulations. Information presented on this web site is considered public information and may be redistributed or copied. Mecklenburg County and its data providers give no warranty, expressed or implied, as to the accuracy, precision, timeliness, completeness, or any other aspect of the data presented. The publisher and data providers assume no liability for damage arrising from the use of this web site or the data provided herein.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+            </div>
+        </div>
+
+        <!-- scripts at the bottom yo -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="js/main.js?foo=17733"></script>
+        <!-- <script src="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script> -->
+        <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+        <!-- Call AFTER leaflet.js call  -->
+        <script src="../static/js/mymap.js"></script>
 
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
-    <h1>WalkSafe</h1>
-    <p>Project description goes here</p>
-  </div>
+    </body>
 
-  <br><br><br><br>
-
-  <div id="mapid" style="width: 640px; height: 500px; position: relative;">
-  </div>
-
-  <form action="/output" method="get">
-    Start Latitude:
-    <input type="text" id="start_lat_point" name='start_lat_point'>
-    Start Longitude:
-    <input type="text" id="start_lon_point" name='start_lon_point'>
-    <br> <br>
-    End Latitude:
-    <input type="text" id="end_lat_point" name='end_lat_point'>
-    End Longitude:
-    <input type="text" id="end_lon_point" name='end_lon_point'>
-    <br>
-  <!-- </form> -->
-    <br>
-  <!-- <form name="hour_of_day"> -->
-    Hour of Day:
-    <select name="hour_of_day">
-      <option value="0">00</option>
-      <option value="1">01</option>
-      <option value="2">02</option>
-      <option value="3">03</option>
-      <option value="4">04</option>
-      <option value="5">05</option>
-      <option value="6">06</option>
-      <option value="7">07</option>
-      <option value="8">08</option>
-      <option value="9">09</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="12">12</option>
-      <option value="13">13</option>
-      <option value="14">14</option>
-      <option value="15">15</option>
-      <option value="16">16</option>
-      <option value="17">17</option>
-      <option value="18">18</option>
-      <option value="19">19</option>
-      <option value="20">20</option>
-      <option value="21">21</option>
-      <option value="22">22</option>
-      <option value="23">23</option>
-    </select>
-    <br>
-    <button type="submit" class="btn btn-default btn-me">Route</button>
-    <!-- <input type="submit"> -->
-  </form>
-
-  <!-- <div class = "container">
-  <form  action="/output" method="GET">
-    <div id="coords_forms_start" align="center">
-      <div class="form-group">
-        <label for="start_lat_point">Start Latitude</label>
-        <input type="text" id="start_lat_point" name='start_lat_point' placeholder="e.g. ">
-
-        <label for="start_lon_point">Longitude:</label>
-        <input type="text" id="start_lon_point" name='start_lon_point' placeholder="e.g. ">
-      </div>
-    </div>
-
-    <div id="coords_forms_end" align="center">
-      <div class="form-group">
-        <label for="end_lat_point">End Latitude</label>
-        <input type="text" id="end_lat_point" name='end_lat_point' placeholder="e.g. ">
-
-        <label for="end_lon_point">Longitude</label>
-        <input type="text" id="end_lon_point" name='end_lon_point' placeholder="e.g. ">
-      </div>
-    </div>
-  </form>
-  </div> -->
-
-  <!-- Bootstrap core JavaScript
-  ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-      <script src="../static/js/bootstrap.min.js"></script>
-
-
-
-
-  <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
-  <!-- Call AFTER leaflet.js call  -->
-  <script src="../static/js/intro_page.js"></script>
-  </body>
 </html>

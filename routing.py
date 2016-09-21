@@ -34,7 +34,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None):
     lon_end = end_point[1]
 
     # con = psycopg2.connect(database='routing_db_crime', user='nishan', password='vikaspuri')
-    cur = con.cursor()
+    # cur = con.cursor()
     if model is None:
         query = """
                 SELECT * FROM pgr_dijkstra(
@@ -89,7 +89,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None):
     return df
 
 
-def render_route(df, con, fname):
+def render_route(df, con, fname, routing_map=None, line_color='blue'):
     """
     Given a route's dataframe, use folium to render it
     con : connection to database
@@ -103,8 +103,8 @@ def render_route(df, con, fname):
 
     # Insight office (40.7438973, -73.9909419)
     # routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15)
-    routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15,
-                    tiles='https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/\{z\}/\{x\}/\{y\}?access_token=pk.eyJ1IjoibmFoc2luIiwiYSI6ImNpdDdwdDV0bzA5dHkyeW13ZTh4enl0c3MifQ.iOW2JTxp_HkABm9wuTuPqA', attr='My Data Attribution')
+    # routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15,
+    #                 tiles='https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/\{z\}/\{x\}/\{y\}?access_token=pk.eyJ1IjoibmFoc2luIiwiYSI6ImNpdDdwdDV0bzA5dHkyeW13ZTh4enl0c3MifQ.iOW2JTxp_HkABm9wuTuPqA', attr='My Data Attribution')
     folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='Start', icon=folium.Icon(color='red')).add_to(routing_map)
 
     # Get lat, long points for each edge except last one because last edge = -1
@@ -117,7 +117,7 @@ def render_route(df, con, fname):
         for point in lat_long_points:
             point.reverse()
         # print(ways_lat_long_points)
-        folium.PolyLine(lat_long_points).add_to(routing_map)
+        folium.PolyLine(lat_long_points, color=line_color).add_to(routing_map)
 
     end_node = int(df.loc[df.index[-1], 'node'])
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(end_node)
