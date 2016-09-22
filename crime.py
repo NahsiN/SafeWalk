@@ -21,6 +21,7 @@ con = psycopg2.connect(database=dbname, user=username, password=password)
 def associate_roads_with_crime(fname, con):
     # STEP 1
     # Initial load in of the NYC open data set
+    # fname = 'data/NYPD_7_Major_Felony_Incidents_2005--2016'
     # fname = 'data/NYPD_7_Major_Felony_Incidents_2010--2016'
     print('Initial loading from {0}'.format(fname + '.csv'))
     df = pd.read_csv(fname + '.csv')

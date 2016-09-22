@@ -12,7 +12,7 @@ SELECT * FROM pgr_dijkstra(
     'SELECT gid AS id,
          source,
          target,
-         cost_crime0*length AS cost
+         (1 + cost_crime0)*length_m AS cost
         FROM ways',
     -- source    
     (SELECT id FROM ways_vertices_pgr

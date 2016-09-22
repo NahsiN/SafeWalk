@@ -1,0 +1,35 @@
+﻿--UPDATE ways SET cost_crime0 = 0;
+UPDATE ways SET cost_crime_hour_0 = 0;
+UPDATE ways SET cost_crime_hour_1 = 0;
+UPDATE ways SET cost_crime_hour_2 = 0;
+UPDATE ways SET cost_crime_hour_3 = 0;
+UPDATE ways SET cost_crime_hour_4 = 0;
+UPDATE ways SET cost_crime_hour_5 = 0;
+UPDATE ways SET cost_crime_hour_6 = 0;
+UPDATE ways SET cost_crime_hour_7 = 0;
+UPDATE ways SET cost_crime_hour_8 = 0;
+UPDATE ways SET cost_crime_hour_9 = 0;
+UPDATE ways SET cost_crime_hour_10 = 0;
+UPDATE ways SET cost_crime_hour_11 = 0;
+UPDATE ways SET cost_crime_hour_12 = 0;
+UPDATE ways SET cost_crime_hour_13 = 0;
+UPDATE ways SET cost_crime_hour_14 = 0;
+UPDATE ways SET cost_crime_hour_15 = 0;
+UPDATE ways SET cost_crime_hour_16 = 0;
+UPDATE ways SET cost_crime_hour_17 = 0;
+UPDATE ways SET cost_crime_hour_18 = 0;
+UPDATE ways SET cost_crime_hour_19 = 0;
+UPDATE ways SET cost_crime_hour_20 = 0;
+UPDATE ways SET cost_crime_hour_21 = 0;
+UPDATE ways SET cost_crime_hour_22 = 0;
+UPDATE ways SET cost_crime_hour_23 = 0;
+--UPDATE ways SET cost_crime0 = cost_crime0 + 1 WHERE gid = 454442;
+
+--UPDATE ways SET cost_crime_offense_grand_larceny = 0;
+--UPDATE ways SET cost_crime_offense_robbery = 0;
+--UPDATE ways SET cost_crime_offense_grand_larceny_of_motor_vehicle = 0;
+--UPDATE ways SET cost_crime_offense_felony_assault = 0;
+--UPDATE ways SET cost_crime_offense_rape = 0;
+--UPDATE ways SET cost_crime_offense_burglary = 0;
+--UPDATE ways SET cost_crime_offense_murder_and_manslaughter = 0;
+	

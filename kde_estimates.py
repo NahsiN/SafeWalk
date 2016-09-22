@@ -18,7 +18,7 @@ from sklearn.grid_search import GridSearchCV
 
 # Do KDE on a precinct
 # get dataframe by a precinct
-fname = 'data/NYPD_7_Major_Felony_Incidents_2010--2016_with_roads'
+fname = 'data/NYPD_7_Major_Felony_Incidents_2005--2016_with_roads'
 print('Initial loading from {0}'.format(fname + '.csv'))
 df = pd.read_csv(fname + '.csv')
 sys.exit()

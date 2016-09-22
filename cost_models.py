@@ -23,6 +23,7 @@ def update_crime_cost_model(df, id_model, con):
     cur = con.cursor()
     num_crimes = df.shape[0]
 
+    # all major crime stat
     if id_model == 0:
         # returns the size of each group in this case denoting the total number of crimes in each precinct
         df_precinct_crime_counts = df.groupby('Precinct').size()
@@ -37,17 +38,22 @@ def update_crime_cost_model(df, id_model, con):
         num_of_gids = gid_crime_counts.size
         for gid in gid_crime_counts.index:
             i += 1
-            print('Crime cost for road {0} of {1}'.format(i, num_of_gids))
+            # determine precinct the crime belongs to
             precinct_num = df[df.loc[:, 'gid'] == gid].head(1).Precinct.iloc[0]
             # alpha = num of crimes of road / total number of crimes in precinct
             alpha = gid_crime_counts[gid]/df_precinct_crime_counts[precinct_num]
-            cost = 1 + alpha
-            update_crime_cost0 = """
-                                 UPDATE ways SET cost_crime0 = {0} WHERE gid = {1};
-                                 """.format(cost, int(gid))
-            cur.execute(update_crime_cost0)
-            # commit is IMPORTANT TO COMMIT CHANGES
-            con.commit()
+            print('Precinct number {0}, road id {1}: {2} of {3}'.format(precinct_num, gid, i, num_of_gids))
+            # print('Crime cost {0}'.format(alpha))
+            # cost = 1 + alpha
+            cost = alpha
+            # Don't bother with crime that is not categorized with a valid precinct
+            if not np.isnan(precinct_num):
+                update_crime_cost0 = """
+                                     UPDATE ways SET cost_crime0 = {0} WHERE gid = {1};
+                                     """.format(cost, int(gid))
+                cur.execute(update_crime_cost0)
+                # commit is IMPORTANT TO COMMIT CHANGES
+                con.commit()
 
     # group all crimes by the hour
     elif id_model == 1:
@@ -60,7 +66,7 @@ def update_crime_cost_model(df, id_model, con):
             # number of crimes on each road
             gid_crime_counts = group_gid.size()
 
-            # MAKE SURE ALL SQL FIELDS ARE INITIALIZED TO 1!
+            # MAKE SURE ALL SQL FIELDS ARE INITIALIZED TO 0!
             i = 0
             num_of_gids = gid_crime_counts.size
             for gid in gid_crime_counts.index:
@@ -69,22 +75,24 @@ def update_crime_cost_model(df, id_model, con):
                 precinct_num = df_hour[df_hour.loc[:, 'gid'] == gid].head(1).Precinct.iloc[0]
                 # alpha = num of crimes of road / total number of crimes in precinct
                 alpha = gid_crime_counts[gid]/df_hour_precinct_crime_counts[precinct_num]
-                cost = 1 + alpha
-                update_crime_cost = """
-                                     UPDATE ways SET cost_crime_hour_{0} = {1} WHERE gid = {2};
-                                     """.format(hour, cost, int(gid))
+                # print('Crime cost {0}'.format(alpha))
+                # cost = 1 + alpha
+                cost = alpha
+                if not np.isnan(precinct_num):
+                    update_crime_cost = """
+                                         UPDATE ways SET cost_crime_hour_{0} = {1} WHERE gid = {2};
+                                         """.format(hour, cost, int(gid))
                 cur.execute(update_crime_cost)
                 # commit is IMPORTANT TO COMMIT CHANGES
                 con.commit()
 
-    # group crimes by type
+    # group crimes by offense type
     elif id_model == 2:
         group_by_offense = df.groupby('Offense')
-
-        i = 0
-        for offense in group_by_offense.indices.keys():
-            print('id={0}, Offense={1}'.format(i, offense))
-            i += 1
+        # i = 0
+        # for offense in group_by_offense.indices.keys():
+        #     print('id={0}, Offense={1}'.format(i, offense))
+        #     i += 1
 
         for offense in group_by_offense.indices.keys():
             df_offense = group_by_offense.get_group(offense)
@@ -92,6 +100,21 @@ def update_crime_cost_model(df, id_model, con):
             group_gid = df_offense.groupby('gid')
             gid_crime_counts = group_gid.size()
             num_of_gids = gid_crime_counts.size
+            # NEED IF ELSE SATATEMENT
+            if offense == 'GRAND LARCENY':
+                col_id = 'grand_larceny'
+            elif offense == 'ROBBERY':
+                col_id = 'robbery'
+            elif offense == 'GRAND LARCENY OF MOTOR VEHICLE':
+                col_id = 'grand_larceny_of_motor_vehicle'
+            elif offense == 'FELONY ASSAULT':
+                col_id = 'felony_assault'
+            elif offense == 'RAPE':
+                col_id = 'rape'
+            elif offense == 'BURGLARY':
+                col_id = 'burglary'
+            elif col_id == 'MURDER & NON-NEGL. MANSLAUGHTE':
+                col_id = 'murder_and_manslaughter'
             # MAKE SURE ALL SQL FIELDS ARE INITIALIZED TO 1! OR 0?
             i = 0
             for gid in gid_crime_counts.index:
@@ -100,21 +123,23 @@ def update_crime_cost_model(df, id_model, con):
                 # alpha = num of crimes of road / total number of crimes in precinct
                 alpha = gid_crime_counts[gid]/df_offense_precinct_crime_counts[precinct_num]
                 # cost = 1 + alpha
+                # print('Crime cost {0}'.format(alpha))
                 cost = alpha
-                # NEED IF ELSE SATATEMENT
-                update_crime_cost = """
-                                     UPDATE ways SET cost_crime_offense_{0} = {1} WHERE gid = {2};
-                                     """.format(i, cost, int(gid))
+                if not np.isnan(precinct_num):
+                    update_crime_cost = """
+                                         UPDATE ways SET cost_crime_offense_{0} = {1} WHERE gid = {2};
+                                         """.format(col_id, cost, int(gid))
                 cur.execute(update_crime_cost)
-                # THE LOCATION OF THIS IS IMPORTANT! REALLY
                 i += 1
                 # commit is IMPORTANT TO COMMIT CHANGES
                 con.commit()
 
-
     # group crimes by type and hour
     elif id_model == 3:
         pass
+
+
+
         # # MAKE SURE THE COSTS ARE INITIALIZED TO 0!
         # for i in range(0, num_crimes):
         #     # need to check that every crime has associated with a gid value
