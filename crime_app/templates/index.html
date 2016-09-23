@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Site Title</title>
+        <title>Safe Walk</title>
         <meta name="description" content="">
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -35,6 +35,8 @@
           #end_lat_point{width: 90px;}
           #end_lon_point{width: 90px;}
           #hour_of_day{width: 60px;}
+          #crime_type{width:180px;}
+          #personal_bias{width:50px;}
         </style>
         <!-- HTML5 for oldIE -->
         <!--[if lt IE 9]>
@@ -61,9 +63,9 @@
 
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            <li class="active"><a href="./index.html"><i class="icon-home icon-white"></i> Home</a></li>
-                            <li><a href="javascript:void(0)">Link 1</a></li>
-                            <li><a href="javascript:void(0)">Link 2</a></li>
+                            <li class="active"><a href="./index"><i class="icon-home icon-white"></i> Home</a></li>
+                            <li><a href="https://github.com/NahsiN">Github</a></li>
+                            <li><a href="https://www.linkedin.com/in/nishanmann">LinkedIn</a></li>
                         </ul>
                         <div class="navbar-form pull-right" >
                             <label for="searchbox" class="hide">Search</label>
@@ -81,8 +83,8 @@
                 <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
             <![endif]-->
           <div class="container">
-            <h1>WalkSafe <span class="text-info">more text</span></h1>
-            <h2 class="lead">Subtitle</h2>
+            <h1>WalkSafe <span class="text-info">Find the safest walking route for any time of day</span></h1>
+            <h2 class="lead">Insight Data Science Project</h2>
           </div>
         </header>
 
@@ -95,14 +97,14 @@
                                 <h2>Welcome</h2>
                                 <form action="/output" method="get">
                                   Start Latitude:
-                                  <input type="text" id="start_lat_point" name='start_lat_point'>
+                                  <input type="text" id="start_lat_point" name='start_lat_point' value="40.815173">
                                   Start Longitude:
-                                  <input type="text" id="start_lon_point" name='start_lon_point'>
+                                  <input type="text" id="start_lon_point" name='start_lon_point' value="-73.955154">
                                   <br> <br>
                                   End Latitude:
-                                  <input type="text" id="end_lat_point" name='end_lat_point'>
+                                  <input type="text" id="end_lat_point" name='end_lat_point' value="40.819590">
                                   End Longitude:
-                                  <input type="text" id="end_lon_point" name='end_lon_point'>
+                                  <input type="text" id="end_lon_point" name='end_lon_point' value="-73.942065">
                                   <br>
                                 <!-- </form> -->
                                   <br>
@@ -134,6 +136,16 @@
                                     <option value="22">22</option>
                                     <option value="23">23</option>
                                   </select>
+
+                                  Crime Type:
+                                  <select name="crime_type" id="crime_type">
+                                    <option value="0">All</option>
+                                    <option value="1">All + Direct Bodily Harm</option>
+                                    <option value="2">All + Indirect Bodily Harm</option>
+                                  </select>
+                                  <br>
+                                  Personal Bias (1-):
+                                  <input type="text" id="personal_bias" name="personal_bias" value="1">
                                   <br>
                                   <button type="submit" class="btn btn-default btn-me">Route</button>
                                   <!-- <input type="submit"> -->
@@ -186,7 +198,7 @@
 
         <!-- scripts at the bottom yo -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="js/main.js?foo=17733"></script>
+        <script src="../static/js/main.js"></script>
         <!-- <script src="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script> -->
         <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
         <!-- Call AFTER leaflet.js call  -->

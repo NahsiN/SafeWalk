@@ -66,7 +66,8 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
-                            FROM ways',
+                            FROM ways WHERE the_geom && ST_Expand(
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -76,6 +77,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                         directed := false);
                 """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
 
+    # group by hour
     elif model == 1:
         if hour is None:
             raise AssertionError('hour field cannot be None')
@@ -84,12 +86,18 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
         # Example points
         # start_point = (40.7416127, -73.979633)  # 3rd and 28th
         # end_point = (40.739912, -73.9874349)  # lexington and 2nd
-        cost_prefactor = '(1 + (1 + {0})*cost_crime_hour_{1})'.format(personal_bias, hour)
+        # cost_prefactor = '(1 + (1 + {0})*cost_crime_hour_{1})'.format(personal_bias, hour)
+        cost_prefactor = '(1 + {0}*cost_crime_hour_{1}) '.format(personal_bias, hour)
+        # cost_prefactor = '(1 + cost_crime_hour_{1})^{0}'.format(personal_bias, hour)
+        if crime_types is not None:
+            cost_prefactor += ' + {0}*cost_crime_offense_class_{1}_hour_{2}'.format(personal_bias, crime_types[0], hour)
+        print(cost_prefactor)
         query = """
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
-                            FROM ways',
+                            FROM ways WHERE the_geom && ST_Expand(
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -110,6 +118,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
         # crime_types is a dictionary crime_types={'rape': 0.9} where 0.9 is the bias
         for crime in crime_types.keys():
             bias = crime_types[crime]
+            # CHANGE THIS LATER
             cost_prefactor += '+ (1 + {0})*cost_crime_offense_{1} '.format(bias, crime)
             # cost_prefactor = '(1 + (1 + {0})*cost_crime0)'.format(personal_bias)
         cost_prefactor = '(1 + ' + cost_prefactor + ')'
@@ -118,7 +127,8 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
-                            FROM ways',
+                            FROM ways WHERE the_geom && ST_Expand(
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -135,14 +145,17 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
     df = pd.read_sql_query(query, con)
     return df
 
-def prob_of_crime_on_route(df, con, model=None):
+def prob_of_crime_on_route(df, con, model=None, hour=None):
     """
     Given dataframe of route, return probablity of crime on that route given
     the crime statistics
+
+    df : the routing dataframe
     """
 
     prob_crime_type = {'grand_larceny': 1, 'robbery': 1, 'grand_larceny_of_motor_vehicle': 1,
                         'felony_assault': 1, 'rape': 1, 'burglary': 1, 'murder_and_manslaughter': 1}
+    prob_crime_offense_class_hour = {'direct_bodily_harm': 1, 'indirect_bodily_harm': 1}
 
     cur = con.cursor()
     if model is None or model == 0 or model == 2:
@@ -168,9 +181,31 @@ def prob_of_crime_on_route(df, con, model=None):
             prob_crime_type[offense] = 1 - prob_crime_type[offense]
             # print('Probablity of {0} on route {1}'.format(offense, prob_crime_type[offense]))
 
-    return (prob_total_crime, prob_crime_type)
+        return (prob_total_crime, prob_crime_type)
 
-def render_route(df, con, fname, routing_map=None, line_color='blue'):
+    elif model == 1:
+        prob_hour_crime = 1
+        for gid in df.edge[0:-1]:
+            query = """SELECT cost_crime_hour_{0} FROM ways WHERE gid={1}""".format(hour, gid)
+            cur.execute(query)
+            out = cur.fetchone()
+            # (1 - out[0]) is probablity of crime NOT happening on road
+            prob_hour_crime *= (1 - out[0])
+
+            for offense in ['direct_bodily_harm', 'indirect_bodily_harm']:
+                query = 'SELECT cost_crime_offense_class_{0}_hour_{1} FROM ways WHERE gid={2}'.format(offense, hour, gid)
+                cur.execute(query)
+                out = cur.fetchone()
+                prob_crime_offense_class_hour[offense] *= 1 - out[0]
+
+        prob_hour_crime = 1 - prob_hour_crime
+        for offense in ['direct_bodily_harm', 'indirect_bodily_harm']:
+            prob_crime_offense_class_hour[offense] = 1 - prob_crime_offense_class_hour[offense]
+
+        return(prob_hour_crime, prob_crime_offense_class_hour)
+
+
+def render_route(df, con, fname=None, routing_map=None, line_color='blue'):
     """
     Given a route's dataframe, use folium to render it
     con : connection to database
@@ -204,5 +239,19 @@ def render_route(df, con, fname, routing_map=None, line_color='blue'):
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(end_node)
     tmp_df = pd.read_sql_query(query, con)
     folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End', icon=folium.Icon(color='green')).add_to(routing_map)
+    if fname is not None:
+        routing_map.save(fname)
 
-    routing_map.save(fname)
+def route_distance(df, con):
+    """
+    Given a route's dataframe determine total distance (m) using gid
+    """
+
+    dist = 0
+    cur = con.cursor()
+    for edge in df.edge[0:-1]:
+        query = 'SELECT length_m FROM ways WHERE gid={0}'.format(edge)
+        cur.execute(query)
+        out = cur.fetchone()
+        dist += out[0]
+    return dist

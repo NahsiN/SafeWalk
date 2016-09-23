@@ -1,5 +1,12 @@
 Sep. 15
 - [ ] validation framework
+- [x] modify diff_routings.html to be landing page after clicking route
+- [x] add in two clustered crime categories by hour, direct_bodily_harm and indirect_bodily_harm
+- [x] add new entries to SQL database for these new crime classes by the hour
+- [x] add route_distance in routing to calculate distance of route
+- [x] add prob of crime and offense_class on hourly basis. model=2
+- [x] speed up pgr_dijkstra using bounding box around starting lat/lon point
+
 - [x] initial implementation of probablity of crimes including type on route
 - [x] update id_model_1 taking into account hour and personal bias for all crimes
 - [x] update id_model 2 which takes into crime type and associated personal bias
@@ -12,8 +19,6 @@ Sep. 15
       fine before but looking at http://workshops.boundlessgeo.com/postgis-intro/knn.html
       I decided to play it safe and tweak it slightly.
 - [x] cost column only stores alpha
-
-
 - [x] add type of crime cost_models
 - [x] do basic kde fitting to precinct crime data
 - [x] add time of day drop down box

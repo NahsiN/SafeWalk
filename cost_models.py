@@ -134,11 +134,75 @@ def update_crime_cost_model(df, id_model, con):
                 # commit is IMPORTANT TO COMMIT CHANGES
                 con.commit()
 
-    # group crimes by type and hour
+    # group crimes by one of two types (`direct` bodily harm/indirect bodily harm) and hour
     elif id_model == 3:
-        pass
+        direct_bodily_harm_offenses = ['ROBBERY', 'FELONY ASSAULT', 'RAPE', 'MURDER & NON-NEGL. MANSLAUGHTE']
+        indirect_bodily_harm_offenses = ['GRAND LARCENY', 'GRAND LARCENY OF MOTOR VEHICLE', 'BURGLARY']
 
+        group_by_offense = df.groupby('Offense')
+        # for direct bodily harm create a dataframe
+        df_direct_bodily_harm = pd.concat([group_by_offense.get_group(offense) for offense in direct_bodily_harm_offenses])
+        group_by_hour_direct_bodily_harm = df_direct_bodily_harm.groupby('Occurrence Hour')
 
+        df_indirect_bodily_harm = pd.concat([group_by_offense.get_group(offense) for offense in indirect_bodily_harm_offenses])
+        group_by_hour_indirect_bodily_harm = df_indirect_bodily_harm.groupby('Occurrence Hour')
+
+        for hour in group_by_hour_direct_bodily_harm.indices.keys():
+            df_hour_direct_bodily_harm = group_by_hour_direct_bodily_harm.get_group(hour)
+            df_hour_indirect_bodily_harm = group_by_hour_indirect_bodily_harm.get_group(hour)
+
+            df_hour_direct_bodily_harm_precinct_crime_counts = df_hour_direct_bodily_harm.groupby('Precinct').size()
+
+            # group by gid (road id)
+            group_gid_direct_bodily_harm = df_hour_direct_bodily_harm.groupby('gid')
+            # number of crimes on each road
+            gid_crime_counts_direct_bodily_harm = group_gid_direct_bodily_harm.size()
+
+            # Loop over roads with direct and indirect bodily harm
+            i = 0
+            num_of_gids_direct_bodily_harm = gid_crime_counts_direct_bodily_harm.size
+            for gid in gid_crime_counts_direct_bodily_harm.index:
+                i += 1
+                print('Hour {0}: Direct bodily harm. Crime cost for road {1} of {2}'.format(hour, i, num_of_gids_direct_bodily_harm))
+
+                precinct_num = df_hour_direct_bodily_harm[df_hour_direct_bodily_harm.loc[:, 'gid'] == gid].head(1).Precinct.iloc[0]
+                # alpha = num of crimes of road / total number of crimes in precinct
+                alpha = gid_crime_counts_direct_bodily_harm[gid]/df_hour_direct_bodily_harm_precinct_crime_counts[precinct_num]
+                # print('Crime cost {0}'.format(alpha))
+                # cost = 1 + alpha
+                cost = alpha
+                if not np.isnan(precinct_num):
+                    update_crime_cost = """
+                                         UPDATE ways SET cost_crime_offense_class_direct_bodily_harm_hour_{0} = {1} WHERE gid = {2};
+                                         """.format(hour, cost, int(gid))
+                cur.execute(update_crime_cost)
+                # commit is IMPORTANT TO COMMIT CHANGES
+                con.commit()
+
+            df_hour_indirect_bodily_harm_precinct_crime_counts = df_hour_indirect_bodily_harm.groupby('Precinct').size()
+            # group by gid (road id)
+            group_gid_indirect_bodily_harm = df_hour_indirect_bodily_harm.groupby('gid')
+            # number of crimes on each road
+            gid_crime_counts_indirect_bodily_harm = group_gid_indirect_bodily_harm.size()
+
+            i = 0
+            num_of_gids_indirect_bodily_harm = gid_crime_counts_indirect_bodily_harm.size
+            for gid in gid_crime_counts_indirect_bodily_harm.index:
+                i += 1
+                print('Hour {0}: Indirect bodily harm. Crime cost for road {1} of {2}'.format(hour, i, num_of_gids_indirect_bodily_harm))
+                precinct_num = df_hour_indirect_bodily_harm[df_hour_indirect_bodily_harm.loc[:, 'gid'] == gid].head(1).Precinct.iloc[0]
+                # alpha = num of crimes of road / total number of crimes in precinct
+                alpha = gid_crime_counts_indirect_bodily_harm[gid]/df_hour_indirect_bodily_harm_precinct_crime_counts[precinct_num]
+                # print('Crime cost {0}'.format(alpha))
+                # cost = 1 + alpha
+                cost = alpha
+                if not np.isnan(precinct_num):
+                    update_crime_cost = """
+                                         UPDATE ways SET cost_crime_offense_class_indirect_bodily_harm_hour_{0} = {1} WHERE gid = {2};
+                                         """.format(hour, cost, int(gid))
+                cur.execute(update_crime_cost)
+                # commit is IMPORTANT TO COMMIT CHANGES
+                con.commit()
 
         # # MAKE SURE THE COSTS ARE INITIALIZED TO 0!
         # for i in range(0, num_crimes):
