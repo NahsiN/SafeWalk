@@ -19,8 +19,10 @@
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
         <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css" /><![endif]-->
         <!-- <link rel="stylesheet" href="css/main.css?foo=17733"> -->
-        <link rel="stylesheet" href="../static/css/main.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="../static/js/button_labels.js"></script>
 
+        <link rel="stylesheet" href="../static/css/main.css">
         <style>
           /*#mapid {
           height: 95%;
@@ -38,6 +40,9 @@
           #crime_type{width:180px;}
           #personal_bias{width:50px;}
         </style>
+
+
+
         <!-- HTML5 for oldIE -->
         <!--[if lt IE 9]>
             <script>
@@ -84,7 +89,7 @@
             <![endif]-->
           <div class="container">
             <h1>WalkSafe <span class="text-info">Find the safest walking route for any time of day</span></h1>
-            <h2 class="lead">Insight Data Science Project</h2>
+            <h2 class="lead">Project for Insight Data Science Fellowship Fall 2016</h2>
           </div>
         </header>
 
@@ -95,7 +100,7 @@
                         <div id="data" class="span6 pull-left">
                             <div class="overview">
                                 <h2>Welcome</h2>
-                                <form action="/output" method="get">
+                                <form action="/output" method="GET">
                                   Start Latitude:
                                   <input type="text" id="start_lat_point" name='start_lat_point' value="40.815173">
                                   Start Longitude:
@@ -138,25 +143,43 @@
                                     <option value="-1">-1</option>
                                   </select>
 
-                                  Crime Type:
+                                  <!-- Crime Type:
                                   <select name="crime_type" id="crime_type">
                                     <option value="0">All</option>
                                     <option value="1">All + Direct Bodily Harm</option>
                                     <option value="2">All + Indirect Bodily Harm</option>
                                     <option value="3">All + Indirect Bodily Harm + Direct</option>
-                                  </select>
+                                  </select> -->
                                   <br>
-                                  Personal Bias (1-):
-                                  <input type="text" id="personal_bias" name="personal_bias" value="1">
+                                  <!-- 0: all crime, 1: direct bodily harm -->
+                                  Crime Avoidance Level:
+                                  <label>
+                                  <input type="radio" name="crime_type" id="all_crime" value=0 checked>
+                                  Neutral
+                                  </label>
+                                  <label>
+                                  <input type="radio" name="crime_type" id="direct_bodily_harm" value=1>
+                                  Vigilant</label>
+
                                   <br>
-                                  <button type="submit" class="btn btn-default btn-me">Route</button>
+                                  Personal Fear of Crime:
+                                  <!-- <input type="text" id="personal_bias" name="personal_bias" value="1"> -->
+                                  <br>
+                                  <label id="rangeText" for="rangeInput"></label>
+                                  <input type="range" id="rangeInput" name="rangeInput" step="1" min="1" max="5">
+
+                                  <!-- <input type="range" name="points" min="0" max="10"> -->
+                                  <br> <br>
+                                  <button type="submit" class="btn btn-primary btn-medium">Route Me</button>
                                   <!-- <input type="submit"> -->
                                 </form>
+
+
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam faucibus eleifend aliquet. Fusce euismod lorem lacus, vitae tristique justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum cursus elementum risus lobortis vestibulum. Maecenas in ligula massa, in dignissim augue. Sed neque massa, egestas quis auctor in, feugiat vestibulum tellus. Sed nec sapien sollicitudin ipsum venenatis aliquam. Nunc condimentum, est quis molestie suscipit, libero mauris egestas turpis, vitae pretium lorem nibh ac sem.
+                                  Some info about project
                                 </p>
                                 <p>
-                                   Vivamus non sapien urna. Sed eu ipsum odio, eget congue ipsum. Ut faucibus tortor sit amet urna hendrerit et consectetur odio molestie. Vivamus ut ornare elit. Phasellus id dui odio, sed consequat nisl. Praesent id odio et est aliquet congue a sed nulla. Ut massa magna, tincidunt non hendrerit et, condimentum et augue. Phasellus non accumsan nisl. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin vel felis urna.
+                                  More info in another paragraph
                                 </p>
                                 <p>
                                     <a data-toggle="modal" href="#modalDisclaimer" class="btn btn-primary btn-large">Modal</a>
@@ -205,7 +228,6 @@
         <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
         <!-- Call AFTER leaflet.js call  -->
         <script src="../static/js/mymap.js"></script>
-
 
     </body>
 

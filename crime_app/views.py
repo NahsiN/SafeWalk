@@ -66,7 +66,9 @@ def output():
   end_lon_point = float(request.args.get('end_lon_point'))
   hour_of_day = int((request.args.get('hour_of_day')))
   crime_type = int(request.args.get('crime_type'))
-  personal_bias = float(request.args.get('personal_bias'))
+  # personal_bias = float(request.args.get('personal_bias'))
+  # square the input personal bias from the slider to enhance routing effect
+  personal_bias = float(request.args.get('rangeInput'))**2
 
   # end_point = request.args.get('end_point')
   print(start_lat_point, start_lon_point, end_lat_point, end_lon_point)

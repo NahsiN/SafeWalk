@@ -1,4 +1,9 @@
 - [ ] validation framework
+- [x] Crime type --> two buttons on Crime avoidance level
+- [x] Bias --> personal fear of crime. Adjustable slider 1-->5, bias is squared:1-->25.
+- [x] tweaked webpages
+
+
 - [x] compute elapsed time in routing
 - [x] BUG FIX: routing.py:95 A bracket in cost_prefactor was OUT of place. Run times
       slashed from 40s to 10s.
