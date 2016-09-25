@@ -42,7 +42,8 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, length_m AS cost
-                            FROM ways',
+                            FROM ways WHERE the_geom && ST_Expand(
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
@@ -52,6 +53,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                         directed := false);
                 """.format(lon_start, lat_start, lon_end, lat_end)
 
+    # total crime
     elif model == 0:
         # ((1+beta)*alpha)*d
         # 'SELECT gid AS id, source, target, cost_crime0*length_m AS cost
@@ -67,7 +69,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -87,17 +89,24 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
         # start_point = (40.7416127, -73.979633)  # 3rd and 28th
         # end_point = (40.739912, -73.9874349)  # lexington and 2nd
         # cost_prefactor = '(1 + (1 + {0})*cost_crime_hour_{1})'.format(personal_bias, hour)
-        cost_prefactor = '(1 + {0}*cost_crime_hour_{1}) '.format(personal_bias, hour)
+        cost_prefactor = '(1 + {0}*cost_crime_hour_{1} '.format(personal_bias, hour)
         # cost_prefactor = '(1 + cost_crime_hour_{1})^{0}'.format(personal_bias, hour)
         if crime_types is not None:
-            cost_prefactor += ' + {0}*cost_crime_offense_class_{1}_hour_{2}'.format(personal_bias, crime_types[0], hour)
+            print(crime_types)
+            # cost_prefactor += ' + {0}*cost_crime_offense_class_{1}_hour_{2})'.format(personal_bias, crime_types, hour)
+            for crime in crime_types:
+                cost_prefactor += ' + {0}*cost_crime_offense_class_{1}_hour_{2}'.format(personal_bias, crime, hour)
+            cost_prefactor += ' )'
+        else:
+            cost_prefactor += ')'
+
         print(cost_prefactor)
         query = """
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -107,7 +116,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                         directed := false);
                 """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
 
-    # group by type of crime
+    # group by type of crime DISCARDING the hour
     elif model == 2:
         if personal_bias is None:
             raise AssertionError('Please specify a basic personal_bias between 0 and 1')
@@ -128,7 +137,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 3000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -158,7 +167,8 @@ def prob_of_crime_on_route(df, con, model=None, hour=None):
     prob_crime_offense_class_hour = {'direct_bodily_harm': 1, 'indirect_bodily_harm': 1}
 
     cur = con.cursor()
-    if model is None or model == 0 or model == 2:
+    # if model is None or model == 0 or model == 2:
+    if hour is None:
         # Deterine probability of crime on route
         # loop through gids
         prob_total_crime = 1
@@ -183,7 +193,8 @@ def prob_of_crime_on_route(df, con, model=None, hour=None):
 
         return (prob_total_crime, prob_crime_type)
 
-    elif model == 1:
+    # elif model == 1:
+    elif hour is not None:
         prob_hour_crime = 1
         for gid in df.edge[0:-1]:
             query = """SELECT cost_crime_hour_{0} FROM ways WHERE gid={1}""".format(hour, gid)

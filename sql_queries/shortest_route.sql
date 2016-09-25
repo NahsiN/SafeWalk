@@ -13,7 +13,7 @@ SELECT * FROM pgr_dijkstra(
          source,
          target,
          (1 + cost_crime0)*length_m AS cost
-        FROM ways',
+        FROM ways WHERE the_geom && ST_Expand(ST_SetSRID(ST_Point(-73.9909419, 40.7438973),4326), 3000)',
     -- source    
     (SELECT id FROM ways_vertices_pgr
             ORDER BY the_geom <-> ST_SetSRID(ST_Point(-73.9909419, 40.7438973),4326) LIMIT 1),

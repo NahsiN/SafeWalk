@@ -1,5 +1,12 @@
-Sep. 15
 - [ ] validation framework
+- [x] compute elapsed time in routing
+- [x] BUG FIX: routing.py:95 A bracket in cost_prefactor was OUT of place. Run times
+      slashed from 40s to 10s.
+- [x] if crime_types=0 i.e. "all" but hour is specified, take that hour into account when minimzing crime.
+      Previously it wasn't taking the hour into account.
+- [x] add in ALL + direct_bodily_harm + indirect_bodily_harm in crime_type form.
+      How useless is this? Is it not a form of personal bias?
+
 - [x] modify diff_routings.html to be landing page after clicking route
 - [x] add in two clustered crime categories by hour, direct_bodily_harm and indirect_bodily_harm
 - [x] add new entries to SQL database for these new crime classes by the hour
