@@ -1,8 +1,11 @@
 - [ ] validation framework
+- [x] change search radius to 5km since average walking speed is 5 km/h. not
+      much change in performance
+- [x] fix prob of crime on route when hour=-1 is selected on form
+
 - [x] Crime type --> two buttons on Crime avoidance level
 - [x] Bias --> personal fear of crime. Adjustable slider 1-->5, bias is squared:1-->25.
 - [x] tweaked webpages
-
 
 - [x] compute elapsed time in routing
 - [x] BUG FIX: routing.py:95 A bracket in cost_prefactor was OUT of place. Run times

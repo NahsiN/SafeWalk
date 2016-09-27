@@ -43,7 +43,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
@@ -69,7 +69,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -106,7 +106,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -137,7 +137,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
                             FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 2000)',
+                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -168,7 +168,7 @@ def prob_of_crime_on_route(df, con, model=None, hour=None):
 
     cur = con.cursor()
     # if model is None or model == 0 or model == 2:
-    if hour is None:
+    if hour is None or hour == -1:
         # Deterine probability of crime on route
         # loop through gids
         prob_total_crime = 1

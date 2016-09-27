@@ -1,0 +1,13 @@
+Brooklyn Gates Av
+Start: (40.687179, -73.947494)
+End: (40.681159, -73.928783)
+Hour: 01
+Neutral
+Rational
+
+Port Morris
+Start: (40.799338, -73.911992)
+End: (40.813744, -73.918784)
+Hour: 02
+Vigilant
+Paranoid

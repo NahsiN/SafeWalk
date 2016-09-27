@@ -3,8 +3,8 @@
 var rangeValues =
 {
     "1": "Rational",
-    "2": "Still Rational",
-    "3": "Bordering on irrationality",
+    "2": "Pseudo Rational",
+    "3": "Borderline Ratinoal-Irrational",
     "4": "Irrational",
     "5": "Paranoid!"
 };

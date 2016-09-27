@@ -99,6 +99,7 @@ def output():
   print('Minimize crime')
   if crime_type == 0:
       if hour_of_day == -1:
+          print('Hi Hello')
           df_crime = routing.shortest_route(start_point, end_point, con, model=0, hour=None, personal_bias=personal_bias, crime_types=None)
       elif hour_of_day != -1:
           df_crime = routing.shortest_route(start_point, end_point, con, model=1, hour=hour_of_day, personal_bias=personal_bias, crime_types=None)
