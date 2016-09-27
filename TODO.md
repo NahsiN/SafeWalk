@@ -1,4 +1,8 @@
 - [ ] validation framework
+- [x] add a run-time arguement to run.py to specify home directory to store
+      routes.html Needed for porting code to server
+
+
 - [x] add slideshare iframe to main page
 
 - [x] change search radius to 5km since average walking speed is 5 km/h. not

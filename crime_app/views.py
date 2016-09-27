@@ -129,7 +129,9 @@ def output():
                    tiles='https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/\{z\}/\{x\}/\{y\}?access_token=pk.eyJ1IjoibmFoc2luIiwiYSI6ImNpdDdwdDV0bzA5dHkyeW13ZTh4enl0c3MifQ.iOW2JTxp_HkABm9wuTuPqA', attr='My Data Attribution')
   # # routing.render_route(df_dist, con, fname='/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/min_dist.html', routing_map=routing_map, line_color='blue')
   routing.render_route(df_dist, con, fname=None, routing_map=routing_map, line_color='blue')
-  routing.render_route(df_crime, con, '/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/routes.html', routing_map=routing_map, line_color='red')
+  route_path = app.path + 'crime/crime_app/templates/routes.html'
+  # print(route_path)
+  routing.render_route(df_crime, con, route_path, routing_map=routing_map, line_color='red')
 
   return render_template("diff_routings.html", shortest_dist=round(shortest_dist, 2), min_crime_dist=round(min_crime_dist, 2), safety_rating_dist=round(1-prob_crime_min_dist, 2), safety_rating_crime=round(1-prob_crime_min_crime, 2))
   # print(end_point)
