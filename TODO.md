@@ -1,4 +1,6 @@
 - [ ] validation framework
+- [x] add slideshare iframe to main page
+
 - [x] change search radius to 5km since average walking speed is 5 km/h. not
       much change in performance
 - [x] fix prob of crime on route when hour=-1 is selected on form

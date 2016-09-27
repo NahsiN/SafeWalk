@@ -3,3 +3,4 @@ docs/
 *.bak
 __pycache__
 .ipynb_checkpoints
+routes.html
