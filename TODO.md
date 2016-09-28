@@ -1,7 +1,10 @@
 - [ ] validation framework
+
+- [x] store route in templates/tmp directory. a uuid is assigned to each route.
+      Clean occasionally
 - [x] add a run-time arguement to run.py to specify home directory to store
       routes.html Needed for porting code to server
-
+- [x] add analyze.py for generating exploratory plots of crime data
 
 - [x] add slideshare iframe to main page
 
