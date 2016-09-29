@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Site Title</title>
+    <title>SafeWalk Routes</title>
     <meta name="description" content="">
 
     <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -94,8 +94,8 @@
     </header>
 
     <!-- Distance for two routes. Dataframe and safety ratings -->
-    <h3 align="center"> Shortest Route (Blue) = {{shortest_dist}}m, Safety Rating = {{safety_rating_dist}} </h3>
-    <h3 align="center"> Minimal Crime Route (Red) = {{min_crime_dist}}m, Safety Rating = {{safety_rating_crime}}  </h3 >
+    <h3 align="center"> Shortest (Red): {{shortest_dist}}m, Safety Rating = {{safety_rating_dist}} </h3>
+    <h3 align="center"> Safest (Green): {{min_crime_dist}}m, Safety Rating = {{safety_rating_crime}}  </h3 >
     <div class="container">
       <!-- <iframe class="span8 pull-right" width=600px height=600px src="/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/routes.html"> -->
     <!-- width=1280px    -->

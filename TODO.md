@@ -1,4 +1,8 @@
 - [ ] validation framework
+- [x] HUGE OPTIMIZATION IN ROUTING. 100X SPEEDUP. select a subset of the table
+      and then using routing on that small table. The speed up is crazy
+- [x] slight visual changes to app      
+
 - [x] in heat_map.py create a function that plots some cost on roads over some  
       area
 - [x] prototype sql queries particulary one that shortest the compute time by at least

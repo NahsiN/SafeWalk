@@ -37,13 +37,24 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
 
     # con = psycopg2.connect(database='routing_db_crime', user='nishan', password='vikaspuri')
     # cur = con.cursor()
+
+    # select a subset of the road network around the starting point
+    # ----------------------------------------------------------------------- #
+    deg_dist = 0.05
+    # ----------------------------------------------------------------------- #
+
+    drop_query = """
+                 CREATE TEMP TABLE ways_tmp ON COMMIT DROP AS SELECT * FROM ways WHERE
+                    ST_DWithin(the_geom, ST_GeomFromText('POINT({0} {1})',4326), {2});
+                """.format(lon_start, lat_start, deg_dist)
+    cur.execute(drop_query)
+
     if model is None:
         query = """
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, length_m AS cost
-                            FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+                            FROM ways_tmp',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
@@ -52,6 +63,21 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
             	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({2}, {3}),4326) LIMIT 1),
                         directed := false);
                 """.format(lon_start, lat_start, lon_end, lat_end)
+
+        # query = """
+        #         SELECT * FROM pgr_dijkstra(
+        #         -- sql edges
+        #         'SELECT gid AS id, source, target, length_m AS cost
+        #                     FROM ways WHERE the_geom && ST_Expand(
+        #                     ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+        #         -- source
+        #         (SELECT id FROM ways_vertices_pgr
+        #                 ORDER BY the_geom <-> ST_SetSRID(ST_Point({0}, {1}),4326) LIMIT 1),
+        #         -- target
+        #         (SELECT id FROM ways_vertices_pgr
+        #     	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({2}, {3}),4326) LIMIT 1),
+        #                 directed := false);
+        #         """.format(lon_start, lat_start, lon_end, lat_end)
 
     # total crime
     elif model == 0:
@@ -80,6 +106,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
 
     # group by hour
+    # also take into account one of two crime_types if needed.
     elif model == 1:
         if hour is None:
             raise AssertionError('hour field cannot be None')
@@ -105,8 +132,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
-                            FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+                            FROM ways_tmp',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -115,6 +141,21 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
             	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({3}, {4}),4326) LIMIT 1),
                         directed := false);
                 """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
+        #
+        # query = """
+        #         SELECT * FROM pgr_dijkstra(
+        #         -- sql edges
+        #         'SELECT gid AS id, source, target, {0}*length_m AS cost
+        #                     FROM ways WHERE the_geom && ST_Expand(
+        #                     ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+        #         -- source
+        #         (SELECT id FROM ways_vertices_pgr
+        #                 ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
+        #         -- target
+        #         (SELECT id FROM ways_vertices_pgr
+        #     	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({3}, {4}),4326) LIMIT 1),
+        #                 directed := false);
+        #         """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
 
     # group by type of crime DISCARDING the hour
     elif model == 2:
@@ -152,6 +193,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
     # cur.execute(query)
     # out = cur.fetchall()
     df = pd.read_sql_query(query, con)
+    con.commit()
     return df
 
 def prob_of_crime_on_route(df, con, model=None, hour=None):
@@ -232,7 +274,7 @@ def render_route(df, con, fname=None, routing_map=None, line_color='blue'):
     # routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15)
     # routing_map = folium.Map(location=[tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], zoom_start=15,
     #                 tiles='https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/\{z\}/\{x\}/\{y\}?access_token=pk.eyJ1IjoibmFoc2luIiwiYSI6ImNpdDdwdDV0bzA5dHkyeW13ZTh4enl0c3MifQ.iOW2JTxp_HkABm9wuTuPqA', attr='My Data Attribution')
-    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='Start', icon=folium.Icon(color='red')).add_to(routing_map)
+    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='Start', icon=folium.Icon(color='blue')).add_to(routing_map)
 
     # Get lat, long points for each edge except last one because last edge = -1
     for edge in df.edge[0:-1]:
@@ -249,7 +291,7 @@ def render_route(df, con, fname=None, routing_map=None, line_color='blue'):
     end_node = int(df.loc[df.index[-1], 'node'])
     query = """SELECT lon, lat FROM ways_vertices_pgr WHERE id = {0};""".format(end_node)
     tmp_df = pd.read_sql_query(query, con)
-    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End', icon=folium.Icon(color='green')).add_to(routing_map)
+    folium.Marker([tmp_df.loc[0, 'lat'], tmp_df.loc[0, 'lon']], popup='End', icon=folium.Icon(color='orange')).add_to(routing_map)
     if fname is not None:
         routing_map.save(fname)
 

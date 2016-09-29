@@ -92,15 +92,18 @@ def output():
   # [0] chosen to take into account all crime on route. The [1] element looks at
   # the two different crime types
   prob_crime_min_dist = routing.prob_of_crime_on_route(df_dist, con, model=None, hour=hour_of_day)[0]
+  end_time = time()
   print(df_dist)
   print(shortest_dist)
   print(prob_crime_min_dist)
+  elapsed_time = timedelta(seconds=end_time - start_time)
+  print('Elapsed time in shortest distance route {0}'.format(str(elapsed_time)))
 
   # df_crime = routing.shortest_route(start_point, end_point, con, model=0, hour=hour_of_day, personal_bias=personal_bias, crime_types=None)
+  start_time = time()
   print('Minimize crime')
   if crime_type == 0:
       if hour_of_day == -1:
-          print('Hi Hello')
           df_crime = routing.shortest_route(start_point, end_point, con, model=0, hour=None, personal_bias=personal_bias, crime_types=None)
       elif hour_of_day != -1:
           df_crime = routing.shortest_route(start_point, end_point, con, model=1, hour=hour_of_day, personal_bias=personal_bias, crime_types=None)
@@ -124,19 +127,21 @@ def output():
   print('Routing complete')
   end_time = time()
   elapsed_time = timedelta(seconds=end_time - start_time)
-  print('Elapsed time in routing {0}'.format(str(elapsed_time)))
+  print('Elapsed time in minimal crime route {0}'.format(str(elapsed_time)))
+
   #
-  routing_map = folium.Map(location=[start_lat_point, start_lon_point], zoom_start=12,
+  print('Creating map')
+  routing_map = folium.Map(location=[start_lat_point, start_lon_point], zoom_start=14,
                    tiles='https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/\{z\}/\{x\}/\{y\}?access_token=pk.eyJ1IjoibmFoc2luIiwiYSI6ImNpdDdwdDV0bzA5dHkyeW13ZTh4enl0c3MifQ.iOW2JTxp_HkABm9wuTuPqA', attr='My Data Attribution')
   # # routing.render_route(df_dist, con, fname='/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/min_dist.html', routing_map=routing_map, line_color='blue')
-  routing.render_route(df_dist, con, fname=None, routing_map=routing_map, line_color='blue')
+  routing.render_route(df_dist, con, fname=None, routing_map=routing_map, line_color='red')
   uuid_fname = str(uuid.uuid4())
   # route_path = app.path + 'crime/crime_app/templates/routes.html'
   route_path = app.path + 'crime/crime_app/templates/tmp/' + uuid_fname + '.html'
   page_loc = 'http://localhost:5050/tmp/' + uuid_fname + '.html'
   print('Routes unique filename={0}'.format(uuid_fname))
   # print(page_loc)
-  routing.render_route(df_crime, con, route_path, routing_map=routing_map, line_color='red')
+  routing.render_route(df_crime, con, route_path, routing_map=routing_map, line_color='green')
 
   return render_template("diff_routings.html", shortest_dist=round(shortest_dist, 2), min_crime_dist=round(min_crime_dist, 2), safety_rating_dist=round(1-prob_crime_min_dist, 2), safety_rating_crime=round(1-prob_crime_min_crime, 2), routes_page_loc=page_loc)
   # print(end_point)
