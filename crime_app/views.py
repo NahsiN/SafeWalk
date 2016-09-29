@@ -138,7 +138,10 @@ def output():
   uuid_fname = str(uuid.uuid4())
   # route_path = app.path + 'crime/crime_app/templates/routes.html'
   route_path = app.path + 'crime/crime_app/templates/tmp/' + uuid_fname + '.html'
+  # for local machine
   page_loc = 'http://localhost:5050/tmp/' + uuid_fname + '.html'
+  # for EC2 instance
+  # page_loc = 'http://safewalk.ddns.net:5050/tmp/' + uuid_fname + '.html'
   print('Routes unique filename={0}'.format(uuid_fname))
   # print(page_loc)
   routing.render_route(df_crime, con, route_path, routing_map=routing_map, line_color='green')
