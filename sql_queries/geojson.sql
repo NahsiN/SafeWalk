@@ -1,0 +1,1 @@
+﻿SELECT ST_AsGeoJSON(the_geom) from ways where gid=1;

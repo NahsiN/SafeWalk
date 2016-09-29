@@ -1,4 +1,8 @@
 - [ ] validation framework
+- [x] in heat_map.py create a function that plots some cost on roads over some  
+      area
+- [x] prototype sql queries particulary one that shortest the compute time by at least
+      20x times
 
 - [x] store route in templates/tmp directory. a uuid is assigned to each route.
       Clean occasionally

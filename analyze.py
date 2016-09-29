@@ -56,3 +56,19 @@ for offense in indirect_bodily_harm_offenses:
     df_tmp = df[df.loc[:,'Offense'] == offense]
     df_tmp.groupby('Occurrence Hour').size().plot(logy=True, label=offense)
     plt.legend()
+
+# specific types of crimes
+offense = 'ROBBERY'
+df_tmp = df[df.loc[:,'Offense'] == offense]
+df_tmp.groupby('Occurrence Hour').size().plot(logy=False, label=offense, figsize=(19.1, 7.5), fontsize=20, linewidth=2)
+plt.legend()
+plt.xlabel('Occurrence Hour', fontsize=20)
+plt.ylabel('Numbers', fontsize=20)
+
+offense = 'FELONY ASSAULT'
+df_tmp = df[df.loc[:,'Offense'] == offense]
+df_tmp.groupby('Occurrence Hour').size().plot(logy=False, label=offense, figsize=(19.1, 7.5), fontsize=20, linewidth=2)
+plt.legend()
+plt.xlabel('Occurrence Hour', fontsize=20)
+plt.ylabel('Numbers', fontsize=20)
+plt.savefig('felony_assault.png', bbox_inches='tight')
