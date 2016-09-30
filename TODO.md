@@ -1,4 +1,8 @@
 - [ ] validation framework
+- [x] add javascript code for: on map click fill out lat/long forms
+- [x] add how to instructions including video
+- [x] route page shows how much longer the safer path is
+
 - [x] HUGE OPTIMIZATION IN ROUTING. 100X SPEEDUP. select a subset of the table
       and then using routing on that small table. The speed up is crazy
 - [x] slight visual changes to app      

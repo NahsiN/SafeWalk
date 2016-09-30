@@ -88,14 +88,14 @@
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
         <![endif]-->
       <div class="container">
-        <h1>WalkSafe <span class="text-info">Find the safest walking route for any time of day</span></h1>
+        <h1>WalkSafe <span class="text-info">Hour of Day: {{time_of_day}}</span></h1>
         <h2 class="lead">Compare routes</h2>
       </div>
     </header>
 
     <!-- Distance for two routes. Dataframe and safety ratings -->
-    <h3 align="center"> Shortest (Red): {{shortest_dist}}m, Safety Rating = {{safety_rating_dist}} </h3>
-    <h3 align="center"> Safest (Green): {{min_crime_dist}}m, Safety Rating = {{safety_rating_crime}}  </h3 >
+    <h3 align="center"> Shortest (Red): {{shortest_dist}}km, Safety Rating = {{safety_rating_dist}} </h3>
+    <h3 align="center"> Safest (Green): {{min_crime_dist}}km, Safety Rating = {{safety_rating_crime}}, {{distance_ratio}}% longer</h3>
     <div class="container">
       <!-- <iframe class="span8 pull-right" width=600px height=600px src="/home/nishan/Code/InsightDataScience/my_projects_env/crime/crime_app/templates/routes.html"> -->
     <!-- width=1280px    -->

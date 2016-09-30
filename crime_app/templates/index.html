@@ -99,7 +99,14 @@
                     <div class="row">
                         <div id="data" class="span6 pull-left">
                             <div class="overview">
-                                <h2>Welcome</h2>
+                                <h3>Instructions (Video below)</h3>
+                                  Browse the map on your right. Clicking on the map for the first
+                                  time will generate a marker and fill in the starting latitude and
+                                  latitude below. Clicking on the map a second time will populate the
+                                  ending latitude and longitude fields. Clicking again will repeat this cycle. Once you are happy with the
+                                  destinations coordinates, select the time of day, crime avoidance level and fear of crime and then click on Route Me!
+
+                                <br> <br>
                                 <form action="/output" method="GET">
                                   Start Latitude:
                                   <input type="text" id="start_lat_point" name='start_lat_point' value="40.687179">
@@ -152,7 +159,8 @@
                                   </select> -->
                                   <br>
                                   <!-- 0: all crime, 1: direct bodily harm -->
-                                  Crime Avoidance Level:
+                                  <a href="javascript:void(0)" rel="tooltip" data-placement="bottom" data-original-title="Neutral: avoid all crimes. Vigilant: avoid all crimes especially the ones causing bodily harm such as murder, assault etc.">Crime Avoidance Level</a>
+                                  <!-- Crime Avoidance Level: -->
                                   <label>
                                   <input type="radio" name="crime_type" id="all_crime" value=0 checked>
                                   Neutral
@@ -162,7 +170,7 @@
                                   Vigilant</label>
 
                                   <br>
-                                  Personal Fear of Crime:
+                                  <a href="javascript:void(0)" rel="tooltip" data-placement="bottom" data-original-title="Adjust slider below.">Personal Fear of Crime</a>
                                   <!-- <input type="text" id="personal_bias" name="personal_bias" value="1"> -->
                                   <br>
                                   <label id="rangeText" for="rangeInput"></label>
@@ -174,22 +182,14 @@
                                   <!-- <input type="submit"> -->
                                 </form>
 
-
                                 <p>
-                                  Some info about project
-                                  <iframe src="//www.slideshare.net/slideshow/embed_code/key/jLiaa4HGGz2xnh" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/NishanMann/w4-tuesday-66450181" title="W4 tuesday" target="_blank">W4 tuesday</a> </strong> from <strong><a target="_blank" href="//www.slideshare.net/NishanMann">Nishan Mann</a></strong> </div>
+                                  This project was created during my Insight data science fellowship
+                                  in September 2016.
                                 </p>
                                 <p>
                                   More info in another paragraph
                                 </p>
-                                <p>
-                                    <a data-toggle="modal" href="#modalDisclaimer" class="btn btn-primary btn-large">Modal</a>
-                                    <a href="javascript:void(0)" class="btn" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">Popover</a>
-                                    <a href="javascript:void(0)" rel="tooltip" data-placement="bottom" data-original-title="Tooltip on bottom.">Tooltip</a>
-                                </p>
-                                <p>
-                                    See <a href="http://twitter.github.com/bootstrap/">Twitter's Bootstrap site</a> for full CSS/JS documentation.
-                                </p>
+
                             </div>
                         </div>
                         <div id="map-area" class="span6 pull-right">
@@ -199,12 +199,46 @@
                 </div><!-- end of main row -->
             </div>
 
-            <hr>
+            <div>
+              <div align="center" class="container">
+                <div class="span12">
+                <h1 align="center">Video How To</h1>
+                <div align="center" class="container">
+                  <iframe width="560" height="315" src="https://www.youtube.com/embed/owkWsxEKJOI" frameborder="0" allowfullscreen></iframe>
+                </div>
+                </div>
+              </div>
+            </div>
+
+          <br> <br>
+            </div>
+            <div align="center" class="container">
+              <div class="span12">
+                <h1 align="center"> Presentation </h1>
+                <iframe src="//www.slideshare.net/slideshow/embed_code/key/u7MmfdBcnUC8hn" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+                <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/NishanMann/w4-wed" title="W4 wed" target="_blank">W4 wed</a> </strong> from <strong><a href="//www.slideshare.net/NishanMann" target="_blank">Nishan Mann</a></strong>
+                </div>
+              </div>
+            </div>
+
+            <p>
+                <a data-toggle="modal" href="#modalDisclaimer" class="btn btn-primary btn-large">Modal</a>
+                <a href="javascript:void(0)" class="btn" rel="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-original-title="Popover on top">Popover</a>
+                <a href="javascript:void(0)" rel="tooltip" data-placement="bottom" data-original-title="Tooltip on bottom.">Tooltip</a>
+            </p>
+
             <footer class="textcenter">
                 <p class="muted">
-                    <a href="https://github.com/tobinbradley/leaflet-bootstrap-mapping-template">Fork me on Github</a>
+                    <a href="https://github.com/NahsiN/SafeWalk">Fork SafeWalk on Github</a>
                 </p>
             </footer>
+
+            <footer class="textcenter">
+                <p class="muted">
+                    <a href="https://github.com/tobinbradley/leaflet-bootstrap-mapping-template">Fork tobinbradley's bootstrap template on Github</a>
+                </p>
+            </footer>
+
 
         </div><!-- /container -->
 
