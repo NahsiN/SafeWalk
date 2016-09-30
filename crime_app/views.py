@@ -147,7 +147,7 @@ def output():
   # print(page_loc)
   routing.render_route(df_crime, con, route_path, routing_map=routing_map, line_color='green')
 
-  return render_template("diff_routings.html", shortest_dist=round(shortest_dist*1e-3, 2), min_crime_dist=round(min_crime_dist*1e-3, 2), safety_rating_dist=round(1-prob_crime_min_dist, 1), safety_rating_crime=round(1-prob_crime_min_crime, 2), routes_page_loc=page_loc, distance_ratio=round((distance_ratio-1)*100, 2), time_of_day=hour_of_day)
+  return render_template("diff_routings.html", shortest_dist=round(shortest_dist*1e-3, 2), min_crime_dist=round(min_crime_dist*1e-3, 2), safety_rating_dist=round(1-prob_crime_min_dist, 2), safety_rating_crime=round(1-prob_crime_min_crime, 2), routes_page_loc=page_loc, distance_ratio=round((distance_ratio-1)*100, 2), time_of_day=hour_of_day)
   # print(end_point)
   #just select the Cesareans  from the birth dtabase for the month that the user inputs
   # query = "SELECT index, attendant, birth_month FROM birth_data_table WHERE delivery_method='Cesarean' AND birth_month='%s'" % patient
