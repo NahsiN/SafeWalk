@@ -1,3 +1,9 @@
+"""
+Contains the different cost models used in the project
+
+Nishan Singh Mann
+"""
+
 import pandas as pd
 import numpy as np
 import overpass
