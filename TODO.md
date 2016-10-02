@@ -1,4 +1,9 @@
 - [ ] validation framework
+
+- [x] create new youtube demo
+- [x] add error page for invalid lat/long
+- [x] plot D/D_0 vs β to see effect of personal bias on two different routes
+
 - [x] add javascript code for: on map click fill out lat/long forms
 - [x] add how to instructions including video
 - [x] route page shows how much longer the safer path is

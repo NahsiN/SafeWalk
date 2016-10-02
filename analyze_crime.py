@@ -1,5 +1,5 @@
 """
-Exploratory plots of data to justify app design
+Exploratory plots of crime data to justify app design
 """
 
 import pandas as pd
