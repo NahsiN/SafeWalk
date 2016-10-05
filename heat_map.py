@@ -26,6 +26,7 @@ con = psycopg2.connect(database=dbname, user=username, password=password)
 
 # Given lat, long point extract nearest roads
 # values I tried 0.05: HUGE, 0.03
+# brooklyn points (40.687179, -73.947494)
 query = """
         SELECT *, ST_AsGeoJSON(the_geom) AS geojson_geometry FROM ways WHERE
 	       ST_DWithin(the_geom, ST_GeomFromText('POINT(-73.947494 40.687179)', 4326), 0.03)
@@ -35,11 +36,12 @@ df = pd.read_sql(query, con)
 # color lines
 # sm = mpl.cm.ScalarMappable(norm=mpl.colors.Normalize(vmin=df.cost_crime0.min(), vmax=df.cost_crime0.max()), cmap=mpl.cm.jet)
 # sys.exit()
-def road_crime_heat_map(df, col, percentile='75%'):
+def road_crime_heat_map(df, col, percentile='75%', fname='heat_map.html'):
     """
     Describe here
 
     df : dataframe contaning all the relevan info. look at query above
+    col : column of crime you are interested in
     """
     # col = 'cost_crime_hour_1'
     # sm = mpl.cm.ScalarMappable(norm=mpl.colors.Normalize(vmin=df.cost_crime0.min(), vmax=df.cost_crime0.describe(), cmap=mpl.cm.jet))
@@ -72,7 +74,7 @@ def road_crime_heat_map(df, col, percentile='75%'):
         cost_hex_color =  mpl.colors.rgb2hex(sm.to_rgba(cost))
         folium.PolyLine(coords, color=cost_hex_color, weight=8, opacity=0.6, latlon=False).add_to(mymap)
 
-    mymap.save('test.html')
+    mymap.save(fname)
 
 
 # Convert output to a geojson file

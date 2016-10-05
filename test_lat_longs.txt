@@ -1,13 +1,16 @@
 Start: (40.815173, -73.955154)
 End: (40.819590, -73.942065)
 
-
 Brooklyn Gates Av
 Start: (40.687179, -73.947494)
 End: (40.681159, -73.928783)
 Hour: 01
 Neutral
 Rational
+Values that give best agreement with trulia map
+Hour: -2
+vigilant
+Borderline
 
 Port Morris
 Start: (40.799338, -73.911992)
@@ -16,4 +19,9 @@ Hour: 02
 Vigilant
 Paranoid
 
+Big diff in safety rating. Manhattan
+Start: (40.718575, -74.004679)
+End: (40.727747, -74.005022)
+Hour: 2
+Vigilant and Paranoid
 Break test case
