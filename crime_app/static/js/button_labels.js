@@ -4,9 +4,9 @@ var rangeValues =
 {
     "1": "Rational",
     "2": "Pseudo Rational",
-    "3": "Borderline Ratinoal-Irrational",
+    "3": "Borderline Rational-Irrational",
     "4": "Irrational",
-    "5": "Paranoid!"
+    "5": "Extreme"
 };
 
 

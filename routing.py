@@ -49,6 +49,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 """.format(lon_start, lat_start, deg_dist)
     cur.execute(drop_query)
 
+    # do shortest distance
     if model is None:
         query = """
                 SELECT * FROM pgr_dijkstra(
@@ -94,8 +95,7 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
                 SELECT * FROM pgr_dijkstra(
                 -- sql edges
                 'SELECT gid AS id, source, target, {0}*length_m AS cost
-                            FROM ways WHERE the_geom && ST_Expand(
-                            ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+                            FROM ways_tmp',
                 -- source
                 (SELECT id FROM ways_vertices_pgr
                         ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
@@ -104,6 +104,21 @@ def shortest_route(start_point, end_point, con, model=None, hour=None, personal_
             	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({3}, {4}),4326) LIMIT 1),
                         directed := false);
                 """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
+        # old query, take a HUGE amount of time
+        # query = """
+        #         SELECT * FROM pgr_dijkstra(
+        #         -- sql edges
+        #         'SELECT gid AS id, source, target, {0}*length_m AS cost
+        #                     FROM ways WHERE the_geom && ST_Expand(
+        #                     ST_SetSRID(ST_Point({1}, {2}),4326), 5000)',
+        #         -- source
+        #         (SELECT id FROM ways_vertices_pgr
+        #                 ORDER BY the_geom <-> ST_SetSRID(ST_Point({1}, {2}),4326) LIMIT 1),
+        #         -- target
+        #         (SELECT id FROM ways_vertices_pgr
+        #     	    ORDER BY the_geom <-> ST_SetSRID(ST_Point({3}, {4}),4326) LIMIT 1),
+        #                 directed := false);
+        #         """.format(cost_prefactor, lon_start, lat_start, lon_end, lat_end)
 
     # group by hour
     # also take into account one of two crime_types if needed.

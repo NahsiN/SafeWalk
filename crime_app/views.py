@@ -81,7 +81,8 @@ def output():
 
   elif crime_type == 1:
       if hour_of_day == -1:
-          pass
+        #   raise AssertionError('This clause is not yet implemented')
+          return render_template("500-error-implement.html")
       elif hour_of_day != -1:
           df_crime = routing.shortest_route(start_point, end_point, con, model=1, hour=hour_of_day, personal_bias=personal_bias, crime_types=['direct_bodily_harm'])
   elif crime_type == 2:
@@ -138,6 +139,10 @@ def output():
 @app.route('/invalid_lat_lon')
 def invalid_lat_long():
     return render_template("500-error.html")
+
+@app.route('/to_implement')
+def to_implement():
+    return render_template("500-error-implement.html")
 
 @app.route('/min_dist')
 def min_dist():
