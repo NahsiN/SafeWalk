@@ -1,6 +1,8 @@
 Organized in descending chronological order. So the top entries are the latest
 fixes to the code.
 
+- [x] add one more test point
+
 - [ ] validation framework
 - [ ] **FIX**: hour = -1 and crime type is vigilant. Need to add two more
       columns to the database

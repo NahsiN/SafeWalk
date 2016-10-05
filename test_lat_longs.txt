@@ -19,4 +19,9 @@ Hour: 02
 Vigilant
 Paranoid
 
+Big diff in safety rating. Manhattan
+Start: (40.718575, -74.004679)
+End: (40.727747, -74.005022)
+Hour: 2
+Vigilant and Paranoid
 Break test case
