@@ -1,4 +1,11 @@
+Organized in descending chronological order. So the top entries are the latest
+fixes to the code.
+
 - [ ] validation framework
+- [ ] **FIX**: hour = -1 and crime type is vigilant. Need to add two more
+      columns to the database
+- [x] fix last value on scale. Now says extreme
+- [x] for now display error page is hour=-1
 
 - [x] create new youtube demo
 - [x] add error page for invalid lat/long
@@ -8,7 +15,7 @@
 - [x] add how to instructions including video
 - [x] route page shows how much longer the safer path is
 
-- [x] HUGE OPTIMIZATION IN ROUTING. 100X SPEEDUP. select a subset of the table
+- [x] **HUGE OPTIMIZATION IN ROUTING. 100X SPEEDUP.** select a subset of the table
       and then using routing on that small table. The speed up is crazy
 - [x] slight visual changes to app      
 
