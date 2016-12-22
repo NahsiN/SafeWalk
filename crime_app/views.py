@@ -15,7 +15,7 @@ from datetime import timedelta
 username = 'nishan' #add your username here (same as previous postgreSQL)
 host = 'localhost'
 dbname = 'routing_db_crime_2'
-password = 'vikaspuri'
+password = '*****'
 # db = create_engine('postgres://%s%s/%s'%(username,host,dbname))
 con = None
 con = psycopg2.connect(database=dbname, user=username, password=password)

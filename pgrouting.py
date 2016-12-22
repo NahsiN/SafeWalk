@@ -9,7 +9,7 @@ import pandas as pd
 
 dbname = 'routing_db'
 username = 'nishan'
-password = 'vikaspuri'
+password = '*****'
 
 # engine = create_engine('postgres://%s:%s@localhost/%s'%(username,password,dbname))
 # print(engine.url)

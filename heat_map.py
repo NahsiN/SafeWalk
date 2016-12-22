@@ -19,7 +19,7 @@ import folium
 
 dbname = 'routing_db_crime_2'
 username = 'nishan'
-password = 'vikaspuri'
+password = '*****'
 con = psycopg2.connect(database=dbname, user=username, password=password)
 
 
